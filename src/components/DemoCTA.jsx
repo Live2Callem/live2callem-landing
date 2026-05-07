@@ -53,7 +53,7 @@ export default function DemoCTA() {
                         Try demo line
                       </div>
                       <div className="font-mono text-xl text-white tracking-tight">
-                        +1 (855) 855-1234
+                        +1 (509) 876-3329
                       </div>
                     </div>
                   </div>
