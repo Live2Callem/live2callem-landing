@@ -45,7 +45,7 @@ export default function FinalCTA() {
               <ArrowRightIcon className="h-4 w-4" />
             </a>
             <a
-              href="tel:+18558551234"
+              href="tel:+15098763329"
               className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-full border border-white/15 bg-white/[0.03] px-7 py-4 text-[15px] font-medium text-white hover:bg-white/[0.07] hover:border-white/25 transition-colors"
             >
               <PlayPhoneIcon className="h-4 w-4" />

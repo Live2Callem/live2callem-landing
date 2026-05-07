@@ -41,7 +41,7 @@ export default function DemoCTA() {
                 </p>
 
                 <a
-                  href="tel:+18558551234"
+                  href="tel:+15098763329"
                   className="mt-8 inline-flex w-full sm:w-auto items-center justify-between gap-6 rounded-2xl border border-signal-400/25 bg-signal-400/[0.06] px-5 py-4 hover:bg-signal-400/[0.1] transition-colors group"
                 >
                   <div className="flex items-center gap-4">
