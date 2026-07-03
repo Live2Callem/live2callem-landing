@@ -1,5 +1,6 @@
 import Reveal from './Reveal'
 import { ArrowRightIcon, PlayPhoneIcon } from './icons'
+import { DEMO_PHONE_HREF } from '../config'
 
 export default function FinalCTA() {
   return (
@@ -45,7 +46,7 @@ export default function FinalCTA() {
               <ArrowRightIcon className="h-4 w-4" />
             </a>
             <a
-              href="tel:+15098763329"
+              href={DEMO_PHONE_HREF}
               className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-full border border-white/15 bg-white/[0.03] px-7 py-4 text-[15px] font-medium text-white hover:bg-white/[0.07] hover:border-white/25 transition-colors"
             >
               <PlayPhoneIcon className="h-4 w-4" />

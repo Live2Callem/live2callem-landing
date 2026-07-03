@@ -1,12 +1,14 @@
 import Nav from './components/Nav'
 import Hero from './components/Hero'
 import PainPoints from './components/PainPoints'
+import RoiCalculator from './components/RoiCalculator'
 import Features from './components/Features'
 import HowItWorks from './components/HowItWorks'
 import DemoCTA from './components/DemoCTA'
 import FAQ from './components/FAQ'
 import FinalCTA from './components/FinalCTA'
 import Footer from './components/Footer'
+import StickyCallBar from './components/StickyCallBar'
 
 export default function App() {
   return (
@@ -15,6 +17,7 @@ export default function App() {
       <main>
         <Hero />
         <PainPoints />
+        <RoiCalculator />
         <Features />
         <HowItWorks />
         <DemoCTA />
@@ -22,6 +25,7 @@ export default function App() {
         <FinalCTA />
       </main>
       <Footer />
+      <StickyCallBar />
     </div>
   )
 }
