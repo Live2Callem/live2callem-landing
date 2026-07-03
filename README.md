@@ -54,14 +54,20 @@ The most important things to change before going live:
 
 | Where | What to change |
 |---|---|
-| `src/components/DemoCTA.jsx` | Replace `+1 (855) 855-1234` with your real demo line |
-| `src/components/FinalCTA.jsx` | Same phone number |
+| `src/config.js` | **Lead email** — the address inside `LEAD_ENDPOINT` is where every form lead is emailed. Also the demo phone number and contact email; every section reads from this one file. |
 | `src/components/Footer.jsx` | Email address |
-| `src/components/DemoCTA.jsx` | Wire up the form's `onSubmit` to your CRM, Calendly, or Formspree |
-| `index.html` | Update `<title>` and meta description for SEO |
+| `index.html` | `<title>`, meta description, and the canonical/OG URLs if your domain isn't live2callem.com |
 
-The form currently fakes submission for the demo. To actually receive leads,
-swap the `onSubmit` body for a `fetch()` call to your endpoint of choice.
+**Lead capture is live.** The demo form POSTs to [FormSubmit](https://formsubmit.co)
+(free, no account, no backend). The **first** submission triggers a one-time
+activation email to the address in `src/config.js` — click the confirmation
+link in it and every lead after that arrives in your inbox, including which
+ad/campaign it came from (UTM tags + referrer are captured automatically).
+Submit the form once yourself right after deploying to trigger activation.
+
+Tip: tag every link you post with UTMs
+(`live2callem.com/?utm_source=facebook&utm_campaign=spring-ac`) and each lead
+email will tell you which channel is producing.
 
 ---
 

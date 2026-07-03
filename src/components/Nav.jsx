@@ -13,6 +13,7 @@ export default function Nav() {
   }, [])
 
   const links = [
+    { label: 'ROI', href: '#roi' },
     { label: 'Features', href: '#features' },
     { label: 'How it works', href: '#how' },
     { label: 'FAQ', href: '#faq' },

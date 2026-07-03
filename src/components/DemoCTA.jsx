@@ -1,16 +1,52 @@
 import { useState } from 'react'
 import Reveal from './Reveal'
 import { ArrowRightIcon, PlayPhoneIcon, CheckIcon } from './icons'
+import { LEAD_ENDPOINT, DEMO_PHONE_DISPLAY, DEMO_PHONE_HREF } from '../config'
+
+// Captures UTM tags + referrer so every lead email tells you which ad,
+// post, or search result produced it.
+function attribution() {
+  const params = new URLSearchParams(window.location.search)
+  const utm = {}
+  for (const key of ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content']) {
+    const v = params.get(key)
+    if (v) utm[key] = v
+  }
+  return {
+    ...utm,
+    page: window.location.href,
+    referrer: document.referrer || 'direct',
+    submitted_at: new Date().toISOString(),
+  }
+}
 
 export default function DemoCTA() {
-  const [submitted, setSubmitted] = useState(false)
+  const [status, setStatus] = useState('idle') // idle | sending | sent | error
   const [form, setForm] = useState({ name: '', business: '', phone: '' })
 
   const onChange = (e) => setForm({ ...form, [e.target.name]: e.target.value })
-  const onSubmit = (e) => {
+
+  const onSubmit = async (e) => {
     e.preventDefault()
-    // Wire this up to your CRM / Calendly / Formspree / API endpoint.
-    setSubmitted(true)
+    // Honeypot: bots fill every field; humans never see this one.
+    if (e.target.elements.company_website?.value) return
+    setStatus('sending')
+    try {
+      const res = await fetch(LEAD_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          _subject: `🔥 New demo lead: ${form.business}`,
+          _template: 'table',
+          ...form,
+          ...attribution(),
+        }),
+      })
+      if (!res.ok) throw new Error(`Lead endpoint returned ${res.status}`)
+      setStatus('sent')
+    } catch {
+      setStatus('error')
+    }
   }
 
   return (
@@ -41,7 +77,7 @@ export default function DemoCTA() {
                 </p>
 
                 <a
-                  href="tel:+15098763329"
+                  href={DEMO_PHONE_HREF}
                   className="mt-8 inline-flex w-full sm:w-auto items-center justify-between gap-6 rounded-2xl border border-signal-400/25 bg-signal-400/[0.06] px-5 py-4 hover:bg-signal-400/[0.1] transition-colors group"
                 >
                   <div className="flex items-center gap-4">
@@ -53,7 +89,7 @@ export default function DemoCTA() {
                         Try demo line
                       </div>
                       <div className="font-mono text-xl text-white tracking-tight">
-                        +1 (509) 876-3329
+                        {DEMO_PHONE_DISPLAY}
                       </div>
                     </div>
                   </div>
@@ -78,7 +114,7 @@ export default function DemoCTA() {
             {/* Right: book demo form */}
             <Reveal delay={120}>
               <div className="relative rounded-2xl border border-white/10 bg-ink-950/60 backdrop-blur-md p-7 sm:p-8">
-                {!submitted ? (
+                {status !== 'sent' ? (
                   <>
                     <h3 className="text-xl font-medium text-white">
                       Or book a 15-min walkthrough
@@ -88,6 +124,14 @@ export default function DemoCTA() {
                     </p>
 
                     <form onSubmit={onSubmit} className="mt-6 space-y-3">
+                      <input
+                        type="text"
+                        name="company_website"
+                        tabIndex="-1"
+                        autoComplete="off"
+                        aria-hidden="true"
+                        className="hidden"
+                      />
                       <Field
                         label="Your name"
                         name="name"
@@ -116,15 +160,26 @@ export default function DemoCTA() {
 
                       <button
                         type="submit"
-                        className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full bg-signal-400 px-6 py-3.5 text-[15px] font-medium text-ink-950 hover:bg-signal-300 transition-colors btn-shine"
+                        disabled={status === 'sending'}
+                        className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full bg-signal-400 px-6 py-3.5 text-[15px] font-medium text-ink-950 hover:bg-signal-300 transition-colors btn-shine disabled:opacity-60 disabled:cursor-wait"
                       >
-                        Book Free Demo
-                        <ArrowRightIcon className="h-4 w-4" />
+                        {status === 'sending' ? 'Sending…' : 'Book Free Demo'}
+                        {status !== 'sending' && <ArrowRightIcon className="h-4 w-4" />}
                       </button>
 
-                      <p className="text-center text-xs text-white/40 mt-3">
-                        Takes 15 minutes. No pressure, no card.
-                      </p>
+                      {status === 'error' ? (
+                        <p className="text-center text-xs text-red-300/90 mt-3">
+                          Couldn't send that — please try again, or just call{' '}
+                          <a href={DEMO_PHONE_HREF} className="underline text-white">
+                            {DEMO_PHONE_DISPLAY}
+                          </a>
+                          .
+                        </p>
+                      ) : (
+                        <p className="text-center text-xs text-white/40 mt-3">
+                          Takes 15 minutes. No pressure, no card.
+                        </p>
+                      )}
                     </form>
                   </>
                 ) : (
